@@ -1,0 +1,18 @@
+{
+    "name": "tcDahn.Editor",
+    "rootNamespace": "tcDahn.Editor",
+    "references": [
+        "GUID:c256f3101ef46a24ebf6ae183ec95ee1"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [
+        "Editor"
+    ],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,11 @@
+{
+  "name": "com.tcdahn.framework",
+  "version": "1.0.0",
+  "displayName": "tcDahn",
+  "description": "Framework for Unity.",
+  "unity": "2022.3",
+  "dependencies": {},
+  "author": {
+    "name": "tcDahn"
+  }
+}
