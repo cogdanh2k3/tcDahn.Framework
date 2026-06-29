@@ -1,65 +1,44 @@
+using System.Diagnostics;
+using System.Threading;
 using UnityEngine;
+using static PlasticPipe.PlasticProtocol.Messages.Serialization.ItemHandlerMessagesSerialization;
 
 namespace tcDahn
 {
     [DefaultExecutionOrder(-50)]
     public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
     {
-
-        [SerializeField] private bool _persistAcrossScenes = true;
-        protected virtual bool PersistAcrossScenes => _persistAcrossScenes;
+        protected abstract bool PersistAcrossScenes { get; }
 
         private static T _instance;
-        private static readonly object _lock = new object();
 
-        private static bool _applicationIsQuitting = false;
+        public static bool IsDestroyed { get; private set; }
+        public static bool HasInstance => _instance != null && !IsDestroyed;
 
         public static T Instance
         {
             get
             {
-                if (_applicationIsQuitting)
+                if (IsDestroyed)
                     return null;
 
-                lock (_lock)
-                {
-                    if (_instance == null)
-                    {
-                        _instance = FindFirstObjectByType<T>();
-                        if (_instance == null)
-                        {
-                            Instantiate();
-                        }
-                    }
-                }
-
-                
+                if (_instance == null)
+                    _instance = FindFirstObjectByType<T>();
                 return _instance;
             }
         }
 
-        public static bool HasInstance => _instance != null && !_applicationIsQuitting;
-
-        private static void Instantiate()
-        {
-            if (HasInstance)
-            {
-                return;
-            }
-            var name = typeof(T).FullName;
-            var go = new GameObject(typeof(T).Name);
-            _instance = go.AddComponent<T>();
-        }
 
         #region MonoBehavior
         protected virtual void Awake()
         {
             if (_instance == null)
             {
-                _instance = (T)this;
+                IsDestroyed = false;
+                _instance = this as T;
+
                 if (PersistAcrossScenes)
                 {
-                    transform.SetParent(null);
                     DontDestroyOnLoad(gameObject);
                 }
             } 
@@ -69,18 +48,13 @@ namespace tcDahn
             }
         }
 
-        protected virtual void OnApplicationQuit()
-        {
-            _applicationIsQuitting = true;
-        }
-
         protected virtual void OnDestroy()
         {
-            if (_instance == this)
-            {
-                _instance = null;
-                _applicationIsQuitting = true;
-            }
+            if (_instance != this)
+                return;
+
+            _instance = null;
+            IsDestroyed = true;
         }
         #endregion
     }
