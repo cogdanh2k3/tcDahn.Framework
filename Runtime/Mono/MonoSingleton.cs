@@ -1,8 +1,6 @@
 using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
-using static PlasticPipe.PlasticProtocol.Messages.Serialization.ItemHandlerMessagesSerialization;
-
 namespace tcDahn
 {
     [DefaultExecutionOrder(-50)]
@@ -41,7 +39,7 @@ namespace tcDahn
                 {
                     DontDestroyOnLoad(gameObject);
                 }
-            } 
+            }
             else if (_instance != this)
             {
                 Destroy(gameObject);
